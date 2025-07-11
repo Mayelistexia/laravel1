@@ -1,27 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    @extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
-    <h2>{{ isset($category) ? 'Edit' : 'Tambah' }} Kategori</h2>
-    <form action="{{ isset($category) ? route('categories.update', $category) : route('categories.store') }}" method="POST">
-        @csrf
-        @if(isset($category)) @method('PUT') @endif
-
-        <div class="mb-3">
-            <label>Nama Kategori</label>
-            <input type="text" name="name" value="{{ old('name', $category->name ?? '') }}" class="form-control" required>
-            @error('name') <small class="text-danger">{{ $message }}</small> @enderror
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning">
+            <h5 class="mb-0">✏️ Edit Kategori</h5>
         </div>
-        <button class="btn btn-success">Simpan</button>
-    </form>
+        <div class="card-body">
+            @include('categories.form', ['category' => $category])
+        </div>
+    </div>
+</div>
 @endsection
-
-</body>
-</html>

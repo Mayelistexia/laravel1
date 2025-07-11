@@ -1,35 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    @extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
-    <h2>Kategori</h2>
-    <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">+ Tambah Kategori</a>
-    <table class="table">
-        <thead>
-            <tr><th>Nama</th><th>Aksi</th></tr>
-        </thead>
-        <tbody>
-            @foreach ($categories as $c)
-                <tr>
-                    <td>{{ $c->name }}</td>
-                    <td>
-                        <a href="{{ route('categories.edit', $c->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('categories.destroy', $c->id) }}" method="POST" style="display:inline-block">@csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus?')">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-@endsection
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">📚 Daftar Kategori</h5>
+            <a href="{{ route('categories.create') }}" class="btn btn-light btn-sm">+ Tambah Kategori</a>
+        </div>
 
-</body>
-</html>
+        <div class="card-body">
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Nama Kategori</th>
+                        <th style="width: 150px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($categories as $category)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $category->name }}</td>
+                            <td>
+                                <a href="{{ route('categories.edit', $category) }}" class="btn btn-sm btn-warning me-1">Edit</a>
+                                <form action="{{ route('categories.destroy', $category) }}" method="POST" class="d-inline" 
+                                      onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
+                                    @csrf @method('DELETE')
+                                    <button class="btn btn-sm btn-danger">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="3" class="text-center">Belum ada kategori.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection

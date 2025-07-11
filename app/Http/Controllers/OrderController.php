@@ -20,10 +20,10 @@ class OrderController extends Controller
 
     // Form buat pesanan baru (sementara satu produk saja)
     public function create()
-    {
-        $products = Product::all();
-        return view('orders.create', compact('products'));
-    }
+{
+    $products = Product::all();
+    return view('orders.create', compact('products'));
+}
 
     // Simpan pesanan
     public function store(Request $request)

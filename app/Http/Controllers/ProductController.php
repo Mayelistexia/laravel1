@@ -29,10 +29,10 @@ class ProductController extends Controller
 {
     $request->validate([
         'name' => 'required',
-        'price' => 'required|numeric|min:0',
+        'price' => 'required|numeric',
         'category_id' => 'required|exists:categories,id',
         'description' => 'nullable|string',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'image' => 'nullable|mimes:jpg,jpeg,png,webp,bmp,gif,svg,tiff,tif,avif|max:5120',
     ]);
 
     $product = new Product();
@@ -42,11 +42,12 @@ class ProductController extends Controller
     $product->description = $request->description;
 
     if ($request->hasFile('image')) {
-        $filename = $request->file('image')->store('images', 'public');
-        $product->image = $filename; // hasil: images/namafile.jpg
+        $path = $request->file('image')->store('products', 'public');
+        $product->image = $path;
     }
 
     $product->save();
+
     return redirect()->route('products.index')->with('success', 'Produk berhasil disimpan!');
 }
 

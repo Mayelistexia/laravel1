@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>Toko Elektronik</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-</head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <a class="navbar-brand" href="/">Toko Elektronik</a>
@@ -11,6 +11,7 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Kategori</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Produk</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('orders.index') }}">Pesanan</a></li>
             </ul>
             <ul class="navbar-nav">
                 @auth
