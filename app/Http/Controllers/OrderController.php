@@ -25,43 +25,58 @@ class OrderController extends Controller
     return view('orders.create', compact('products'));
 }
 
-    // Simpan pesanan
-    public function store(Request $request)
-    {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity'   => 'required|integer|min:1',
+   
+public function store(Request $request)
+{
+    $request->validate([
+        'customer_name' => 'required|string|max:255',
+        'products' => 'required|array',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        $total = 0;
+        $items = [];
+
+        foreach ($request->products as $productId => $data) {
+            if (isset($data['selected'])) {
+                $product = Product::findOrFail($productId);
+                $qty = intval($data['quantity'] ?? 1);
+                $price = $product->price;
+
+                $total += ($price * $qty);
+
+                $items[] = [
+                    'product_id' => $productId,
+                    'quantity' => $qty,
+                    'price' => $price,
+                ];
+            }
+        }
+
+        // Simpan order
+        $order = Order::create([
+            'customer_name' => $request->customer_name,
+            'total_price' => $total,
+            'user_id' => Auth::id(),
         ]);
 
-        DB::beginTransaction();
-
-        try {
-            $product = Product::findOrFail($request->product_id);
-            $total = $product->price * $request->quantity;
-
-            // Simpan order
-            $order = Order::create([
-                'user_id'     => Auth::id(),
-                'status'      => 'pending',
-                'total_price' => $total,
-            ]);
-
-            // Simpan item
-            OrderItem::create([
-                'order_id'   => $order->id,
-                'product_id' => $product->id,
-                'quantity'   => $request->quantity,
-                'price'      => $product->price,
-            ]);
-
-            DB::commit();
-
-            return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dibuat!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors('Gagal membuat pesanan: ' . $e->getMessage());
+        // Simpan order items
+        foreach ($items as $item) {
+            $item['order_id'] = $order->id;
+            OrderItem::create($item);
         }
+
+        DB::commit();
+        return redirect()->route('orders.index')->with('success', 'Transaksi berhasil disimpan!');
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        return back()->withErrors('Gagal menyimpan transaksi: ' . $e->getMessage());
     }
+}
+
 
     // Tampilkan detail pesanan
     public function show(Order $order)
@@ -70,4 +85,18 @@ class OrderController extends Controller
         $order->load('items.product');
         return view('orders.show', compact('order'));
     }
+
+    public function destroy(Order $order)
+{
+    $this->authorize('delete', $order); // Kalau pakai policy. Bisa dihapus kalau tidak perlu
+
+    // Hapus semua item terkait
+    $order->items()->delete();
+
+    // Hapus order
+    $order->delete();
+
+    return redirect()->route('orders.index')->with('success', 'Transaksi berhasil dihapus!');
+}
+
 }

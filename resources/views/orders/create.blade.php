@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $err)
+                <li>{{ $err }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
@@ -25,19 +36,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($products as $product)
-                            <tr>
-                                <td>
-                                    <label>
-                                        <input type="checkbox" name="products[{{ $product->id }}][selected]">
-                                        {{ $product->name }} (Rp{{ number_format($product->price) }})
-                                    </label>
-                                </td>
-                                <td style="width: 120px;">
-                                    <input type="number" name="products[{{ $product->id }}][quantity]" class="form-control form-control-sm" value="1" min="1">
-                                </td>
-                            </tr>
-                        @endforeach
+                       @foreach ($products as $product)
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="products[{{ $product->id }}][selected]">
+                            </td>
+                            <td>{{ $product->name }} (Rp{{ number_format($product->price) }})</td>
+                            <td>
+                                <input type="number" name="products[{{ $product->id }}][quantity]" class="form-control" value="1" min="1">
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
 
