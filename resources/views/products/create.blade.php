@@ -16,13 +16,13 @@
 
         <div class="mb-3">
             <label>Nama Produk</label>
-            <input type="text" name="name" value="{{ old('name', $product->name ?? '') }}" class="form-control" required>
+            <input type="text" name="name" value="{{ old('name', $product->name ?? '') }}" class="form-control" >
             @error('name') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 
         <div class="mb-3">
             <label>Harga</label>
-            <input type="number" name="price" value="{{ old('price', $product->price ?? '') }}" class="form-control" required>
+            <input type="number" name="price" value="{{ old('price', $product->price ?? '') }}" class="form-control" >
             @error('price') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 

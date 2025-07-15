@@ -24,7 +24,7 @@
 
                 <div class="mb-3">
                     <label>Nama Pelanggan</label>
-                    <input type="text" name="customer_name" class="form-control" required>
+                    <input type="text" name="customer_name" class="form-control" >
                 </div>
 
                 <h6 class="mt-4 mb-2">Produk:</h6>

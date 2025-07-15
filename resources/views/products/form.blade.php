@@ -16,20 +16,20 @@
                 <div class="mb-3">
                     <label class="form-label">Nama Produk</label>
                     <input type="text" name="name" class="form-control" 
-                           value="{{ old('name', $product->name ?? '') }}" required>
+                           value="{{ old('name', $product->name ?? '') }}" >
                     @error('name') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Harga</label>
                     <input type="number" name="price" class="form-control" 
-                           value="{{ old('price', $product->price ?? '') }}" required>
+                           value="{{ old('price', $product->price ?? '') }}" >
                     @error('price') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Kategori</label>
-                    <select name="category_id" class="form-select" required>
+                    <select name="category_id" class="form-select" >
                         <option value="">-- Pilih Kategori --</option>
                         @foreach($categories as $c)
                             <option value="{{ $c->id }}" 

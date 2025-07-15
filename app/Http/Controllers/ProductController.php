@@ -29,7 +29,7 @@ class ProductController extends Controller
 {
     $request->validate([
         'name' => 'required',
-        'price' => 'required|numeric',
+        'price' => 'required|numeric|min:0',
         'category_id' => 'required|exists:categories,id',
         'description' => 'nullable|string',
         'image' => 'nullable|mimes:jpg,jpeg,png,webp,bmp,gif,svg,tiff,tif,avif|max:5120',
@@ -82,13 +82,18 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Produk berhasil diupdate.');
     }
 
-    public function destroy(Product $product)
-    {
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
-        $product->delete();
-        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
+public function destroy(Product $product)
+{
+    if ($product->orderItems()->exists()) {
+        return back()->withErrors('Produk tidak bisa dihapus karena sudah digunakan dalam transaksi.');
     }
 
+    if ($product->image) {
+        Storage::disk('public')->delete($product->image);
+    }
+
+    $product->delete();
+    return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
+}
+    
 }

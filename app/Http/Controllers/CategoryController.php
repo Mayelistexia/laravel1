@@ -25,7 +25,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:categories,name',
         ]);
 
         Category::create($request->only('name'));
@@ -41,7 +41,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
         ]);
 
         $category->update($request->only('name'));
@@ -50,9 +50,14 @@ class CategoryController extends Controller
     }
 
     public function destroy(Category $category)
-    {
-        $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
+{
+    if ($category->products()->exists()) {
+        return back()->withErrors('Kategori tidak bisa dihapus karena masih digunakan oleh produk.');
     }
+
+    $category->delete();
+    return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
+}
+
 
 }
