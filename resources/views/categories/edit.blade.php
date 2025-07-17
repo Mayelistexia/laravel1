@@ -7,7 +7,7 @@
             <h5 class="mb-0">✏️ Edit Kategori</h5>
         </div>
         <div class="card-body">
-            @include('categories.form', ['category' => $category])
+            @include('categories.form', ['kategori' => $category])
         </div>
     </div>
 </div>

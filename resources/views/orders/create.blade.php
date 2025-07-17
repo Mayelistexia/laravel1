@@ -1,58 +1,44 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
+    <h2>Buat Transaksi Baru</h2>
 
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $err)
-                <li>{{ $err }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+    <form action="{{ route('orders.store') }}" method="POST">
+        @csrf
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">📝 Buat Transaksi</h5>
+        <div class="mb-3">
+            <label for="customer_name" class="form-label">Nama Pelanggan</label>
+            <input type="text" name="customer_name" class="form-control" value="{{ old('customer_name') }}" >
         </div>
 
-        <div class="card-body">
-            <form action="{{ route('orders.store') }}" method="POST">
-                @csrf
+        <h5>Pilih Produk</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Pilih</th>
+                    <th>Nama Produk</th>
+                    <th>Harga</th>
+                    <th>Jumlah</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($products as $product)
+                <tr>
+                    <td>
+                        <input type="checkbox" name="products[{{ $product->id }}][selected]" value="1">
+                    </td>
+                    <td>{{ $product->name }}</td>
+                    <td>Rp{{ number_format($product->price) }}</td>
+                    <td>
+                        <input type="number" name="products[{{ $product->id }}][quantity]" value="1" min="1" class="form-control" style="width: 80px;">
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
 
-                <div class="mb-3">
-                    <label>Nama Pelanggan</label>
-                    <input type="text" name="customer_name" class="form-control" >
-                </div>
-
-                <h6 class="mt-4 mb-2">Produk:</h6>
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Produk</th>
-                            <th>Jumlah</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                       @foreach ($products as $product)
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="products[{{ $product->id }}][selected]">
-                            </td>
-                            <td>{{ $product->name }} (Rp{{ number_format($product->price) }})</td>
-                            <td>
-                                <input type="number" name="products[{{ $product->id }}][quantity]" class="form-control" value="1" min="1">
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-
-                <button class="btn btn-success">💾 Simpan Transaksi</button>
-            </form>
-        </div>
-    </div>
+        <button type="submit" class="btn btn-success">Simpan Transaksi</button>
+    </form>
 </div>
 @endsection

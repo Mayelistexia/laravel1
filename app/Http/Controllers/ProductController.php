@@ -33,7 +33,12 @@ class ProductController extends Controller
         'category_id' => 'required|exists:categories,id',
         'description' => 'nullable|string',
         'image' => 'nullable|mimes:jpg,jpeg,png,webp,bmp,gif,svg,tiff,tif,avif|max:5120',
-    ]);
+    ],[
+    'name.required' => 'Nama produk wajib diisi.',
+    'price.required' => 'Harga tidak boleh kosong.',
+    'price.numeric' => 'Harga harus berupa angka.',
+    'price.min' => 'Harga tidak boleh kurang dari 0.',
+]);
 
     $product = new Product();
     $product->name = $request->name;

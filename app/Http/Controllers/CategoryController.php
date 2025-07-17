@@ -26,7 +26,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
-        ]);
+        ],['name.required'=>'nama kategori harus di isi',]);
 
         Category::create($request->only('name'));
 

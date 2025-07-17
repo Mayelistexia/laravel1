@@ -31,7 +31,8 @@ public function store(Request $request)
     $request->validate([
         'customer_name' => 'required|string|max:255',
         'products' => 'required|array',
-    ]);
+    ],['customer_name.required' =>'nama pelanggan harus di isi',
+        'product.reqired'=>'produk harus di pilih']);
 
     DB::beginTransaction();
 
